@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mom’s Puzzle Garden</title>
+  <style>
+    :root {
+      --cream: #fbf7ef;
+      --cream-2: #fffdf8;
+      --sage: #596b4c;
+      --sage-2: #8fa07c;
+      --blush: #f5b7b8;
+      --blush-2: #fde4e2;
+      --rose: #d87882;
+      --taupe: #cdbfb0;
+      --ink: #273020;
+      --muted: #746c62;
+      --line: rgba(89, 107, 76, 0.18);
+      --shadow: 0 18px 50px rgba(76, 63, 48, 0.12);
+      --soft-shadow: 0 10px 30px rgba(76, 63, 48, 0.08);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(245, 183, 184, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 0%, rgba(143, 160, 124, 0.16), transparent 30%),
+        linear-gradient(180deg, #fffdf9 0%, var(--cream) 100%);
+      color: var(--ink);
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 34px 0 46px;
+    }
+
+
+
+
+
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+
+    .heart { color: var(--rose); }
+
+
+
+
+
+    .browser {
+      border: 1px solid rgba(116, 108, 98, 0.20);
+      border-radius: 34px;
+      background: rgba(255, 253, 248, 0.84);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+
+
+
+
+
+    .app {
+      padding: clamp(20px, 3vw, 38px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 180px 1fr 220px;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .garden-dog-card {
+      border-radius: 26px;
+      background: linear-gradient(180deg, #fffaf4, #fff5ef);
+      border: 1px solid var(--line);
+      padding: 18px;
+      text-align: center;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .garden-dog {
+      width: 140px;
+      height: auto;
+      display: block;
+      margin: 0 auto 12px;
+      filter: drop-shadow(0 8px 14px rgba(64, 52, 39, 0.12));
+    }
+
+    .crew-art {
+      width: 150px;
+    }
+
+    .garden-dog-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .title-card {
+      text-align: center;
+    }
+
+    .title-card .flourish {
+      color: var(--sage-2);
+      letter-spacing: 0.24em;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .title-card h2 {
+      font-size: clamp(36px, 5vw, 56px);
+      color: var(--sage);
+      line-height: 1.05;
+    }
+
+    .title-card p {
+      margin: 14px auto 0;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.75;
+    }
+
+    .progress-card {
+      border-radius: 26px;
+      padding: 18px;
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      box-shadow: var(--soft-shadow);
+      text-align: center;
+    }
+
+    .progress-card .mini-title {
+      color: var(--sage);
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .plant-wrap {
+      height: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .plant {
+      width: 130px;
+      height: 130px;
+      overflow: visible;
+    }
+
+    .progress-number {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--sage);
+      font-size: 42px;
+      margin-top: 4px;
+      line-height: 1;
+    }
+
+    .progress-text {
+      margin: 8px 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #efe5d8;
+      overflow: hidden;
+      border: 1px solid rgba(89, 107, 76, 0.11);
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--sage-2), var(--sage));
+      border-radius: inherit;
+      transition: width 450ms ease;
+    }
+
+    .row-flowers {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .row-flower {
+      border: 1px solid rgba(89, 107, 76, 0.14);
+      border-radius: 16px;
+      background: rgba(255, 253, 248, 0.68);
+      min-height: 72px;
+      padding: 10px 8px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      transition: transform 220ms ease, background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .row-flower .emoji {
+      font-size: 24px;
+      filter: grayscale(1);
+      opacity: 0.45;
+      transition: filter 220ms ease, opacity 220ms ease, transform 220ms ease;
+    }
+
+    .row-flower strong {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .row-flower.bloomed {
+      background: linear-gradient(180deg, #fffdf8, #fff3f0);
+      border-color: rgba(216, 120, 130, 0.32);
+      box-shadow: 0 10px 24px rgba(216, 120, 130, 0.12);
+      transform: translateY(-2px);
+      animation: bloomPop 420ms ease both;
+    }
+
+    .row-flower.bloomed .emoji {
+      filter: none;
+      opacity: 1;
+      transform: scale(1.06);
+    }
+
+    .row-flower.bloomed strong {
+      color: var(--sage);
+    }
+
+    @keyframes bloomPop {
+      0% { transform: scale(0.94); opacity: 0.6; }
+      55% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1) translateY(-2px); }
+    }
+
+    .quote {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(216, 120, 130, 0.22);
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .play-area {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-bottom: 32px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .puzzle-shell {
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.66), rgba(255,250,244,0.86));
+      padding: 24px;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .puzzle-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .puzzle-topline strong {
+      color: var(--sage);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .sudoku {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      width: min(520px, 100%);
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 24px;
+      background: rgba(245, 183, 184, 0.16);
+      border: 1px solid rgba(216, 120, 130, 0.22);
+    }
+
+    .cell {
+      aspect-ratio: 1;
+      border: 1px solid rgba(216, 120, 130, 0.30);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fde8e6, #fbdbd9);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      color: var(--sage);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 5vw, 48px);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .cell::after {
+      content: "♡";
+      position: absolute;
+      top: 9px;
+      right: 11px;
+      color: rgba(216, 120, 130, 0.34);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 16px;
+    }
+
+    .cell:hover:not(.given) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(216, 120, 130, 0.18);
+    }
+
+    .cell.given {
+      background: linear-gradient(180deg, #f7f0e8, #efe4d7);
+      color: var(--ink);
+      cursor: default;
+      border-color: rgba(89, 107, 76, 0.20);
+    }
+
+    .cell.filled:not(.given) {
+      background: linear-gradient(180deg, #fff8f4, #fce2df);
+      border-color: rgba(89, 107, 76, 0.26);
+    }
+
+    .cell.row-bloomed {
+      background: linear-gradient(180deg, #fff7ee, #f7efe2);
+      border-color: rgba(143, 160, 124, 0.58);
+      color: var(--sage);
+      cursor: default;
+    }
+
+    .cell.row-bloomed::after {
+      content: "✿";
+      color: rgba(143, 160, 124, 0.72);
+    }
+
+    .cell.correct:not(.given) {
+      animation: pop 300ms ease;
+      border-color: rgba(143, 160, 124, 0.66);
+    }
+
+    .cell.wrong:not(.given) {
+      animation: shake 260ms ease;
+      border-color: rgba(216, 120, 130, 0.88);
+    }
+
+    @keyframes pop {
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes shake {
+      20% { transform: translateX(-3px); }
+      40% { transform: translateX(3px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      border: 1px solid transparent;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      background: var(--sage);
+      color: #fffdf8;
+      box-shadow: 0 10px 20px rgba(89, 107, 76, 0.18);
+    }
+
+    .btn.secondary {
+      background: #fffdf8;
+      color: var(--sage);
+      border-color: var(--line);
+    }
+
+    .btn.blush {
+      background: var(--blush);
+      color: #fffdf8;
+      box-shadow: 0 10px 20px rgba(216, 120, 130, 0.18);
+    }
+
+    .message-box {
+      margin-top: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(216, 120, 130, 0.18);
+      background: rgba(255,253,248,0.74);
+      padding: 14px 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      min-height: 58px;
+      text-align: center;
+    }
+
+
+
+    .hidden {
+      display: none !important;
+    }
+
+    .reveal-section {
+      margin-top: 24px;
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+      animation: fadeUp 500ms ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      text-align: center;
+      color: var(--sage);
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .bloom-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .bloom-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 253, 248, 0.8);
+      padding: 18px;
+      text-align: center;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .bloom-card h3 {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      color: var(--sage);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      margin-bottom: 10px;
+    }
+
+    .bloom-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 10px 0 0;
+    }
+
+    .flower-svg {
+      width: 100%;
+      max-width: 210px;
+      height: 170px;
+      overflow: visible;
+    }
+
+    .final-card {
+      border-radius: 28px;
+      border: 1px solid rgba(216, 120, 130, 0.20);
+      background:
+        radial-gradient(circle at 12% 28%, rgba(245, 183, 184, 0.22), transparent 24%),
+        linear-gradient(180deg, #fffdf8, #fff8f4);
+      padding: clamp(22px, 4vw, 34px);
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 28px;
+      align-items: center;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .heart-note {
+      width: 190px;
+      height: 170px;
+      border-radius: 48% 52% 50% 50%;
+      background: linear-gradient(180deg, #fde1df, #f9bfc0);
+      display: grid;
+      place-items: center;
+      color: var(--sage);
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      line-height: 1.25;
+      margin: 0 auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 18px 36px rgba(216, 120, 130, 0.14);
+      position: relative;
+    }
+
+    .heart-note::before,
+    .heart-note::after {
+      content: "";
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      background: inherit;
+      border-radius: 50%;
+      top: -20px;
+      z-index: -1;
+    }
+
+    .heart-note::before { left: 12px; }
+    .heart-note::after { right: 12px; }
+
+    .kicker {
+      color: var(--rose);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .final-copy p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .family-strip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 14px;
+      margin: 0 0 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.64);
+    }
+
+    .family-strip svg {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      flex: 0 0 auto;
+    }
+
+    .family-strip .caption {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .signature {
+      margin-top: 12px;
+      color: var(--rose);
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-size: 28px;
+    }
+
+
+
+    .final-open {
+      max-width: 220px;
+      margin-top: 16px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(39, 48, 32, 0.38);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .35s ease;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: min(720px, 100%);
+      border-radius: 30px;
+      border: 1px solid rgba(216, 120, 130, 0.20);
+      background:
+        radial-gradient(circle at 12% 20%, rgba(245, 183, 184, 0.20), transparent 24%),
+        linear-gradient(180deg, #fffdf8, #fff8f4);
+      box-shadow: 0 30px 70px rgba(48, 35, 29, 0.18);
+      padding: clamp(24px, 5vw, 34px);
+      position: relative;
+      transform: translateY(16px) scale(.98);
+      opacity: 0;
+      transition: transform .35s ease, opacity .35s ease;
+    }
+
+    .modal-backdrop.show .modal-card {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      color: var(--sage);
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .modal-head .mini-westie {
+      width: 72px;
+      flex: 0 0 auto;
+    }
+
+    .modal-head h3 {
+      font-size: clamp(28px, 4vw, 40px);
+      color: var(--sage);
+      line-height: 1.05;
+      margin-top: 6px;
+    }
+
+    .modal-copy p {
+      color: var(--muted);
+      line-height: 1.85;
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+
+    .modal-signoff {
+      margin-top: 14px;
+      color: var(--rose);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      font-style: italic;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      inset: auto 20px 20px auto;
+      width: min(360px, calc(100% - 40px));
+      border-radius: 22px;
+      padding: 16px 18px;
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid rgba(216, 120, 130, 0.22);
+      color: var(--muted);
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+      line-height: 1.55;
+      z-index: 10;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast strong {
+      color: var(--sage);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .final-card {
+        grid-template-columns: 1fr;
+      }
+
+      .family-strip {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .family-strip svg {
+        max-width: 100%;
+      }
+
+      .modal-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .modal-head .mini-westie {
+        width: 64px;
+      }
+
+      .garden-dog-card,
+      .progress-card {
+        max-width: 360px;
+        justify-self: center;
+        width: 100%;
+      }
+
+      .bloom-row {
+        grid-template-columns: 1fr;
+      }
+
+      .final-card {
+        text-align: center;
+      }
+
+      .toast {
+        inset: auto 14px 14px 14px;
+        width: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 18px, 1180px);
+        padding-top: 22px;
+      }
+
+      .browser {
+        border-radius: 24px;
+      }
+
+      .app {
+        padding: 16px;
+      }
+
+      .sudoku {
+        gap: 5px;
+        border-radius: 18px;
+        padding: 7px;
+      }
+
+      .cell {
+        border-radius: 11px;
+        font-size: 28px;
+      }
+
+      .cell::after {
+        font-size: 12px;
+        top: 6px;
+        right: 7px;
+      }
+
+      .puzzle-shell {
+        padding: 16px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="browser" aria-label="Mom's Puzzle Garden interactive gift">
+      <div class="app">
+        <section class="hero">
+          <div class="garden-dog-card">
+            <svg class="garden-dog" viewBox="0 0 180 180" role="img" aria-label="Cute garden dog helper">
+              <defs>
+                <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#fffdf8"/>
+                  <stop offset="100%" stop-color="#f2eee8"/>
+                </linearGradient>
+                <linearGradient id="pinkBandana" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f9c8c8"/>
+                  <stop offset="100%" stop-color="#df8990"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="90" cy="145" rx="48" ry="16" fill="rgba(76,63,48,.10)"/>
+              <path d="M48 65 L35 26 L73 48 Z" fill="url(#fur)" stroke="#d8cec2" stroke-width="3"/>
+              <path d="M132 65 L145 26 L107 48 Z" fill="url(#fur)" stroke="#d8cec2" stroke-width="3"/>
+              <path d="M54 69 Q55 35 91 34 Q126 35 127 69 Q142 79 137 111 Q132 148 91 151 Q48 148 43 111 Q38 79 54 69Z" fill="url(#fur)" stroke="#d8cec2" stroke-width="3"/>
+              <path d="M61 83 Q74 70 86 82" fill="none" stroke="#d9d0c5" stroke-width="3" stroke-linecap="round"/>
+              <path d="M94 82 Q108 70 120 83" fill="none" stroke="#d9d0c5" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="70" cy="91" r="7" fill="#27231f"/>
+              <circle cx="110" cy="91" r="7" fill="#27231f"/>
+              <circle cx="72" cy="89" r="2" fill="#fff"/>
+              <circle cx="112" cy="89" r="2" fill="#fff"/>
+              <path d="M84 107 Q90 101 96 107 Q94 115 90 116 Q86 115 84 107Z" fill="#24211e"/>
+              <path d="M74 122 Q90 136 106 122" fill="none" stroke="#9c8f82" stroke-width="4" stroke-linecap="round"/>
+              <path d="M82 123 Q90 132 98 123 Q94 142 90 144 Q86 142 82 123Z" fill="#e89898"/>
+              <path d="M48 133 Q90 166 132 133 L118 160 Q90 172 62 160 Z" fill="url(#pinkBandana)" stroke="#d87882" stroke-width="3"/>
+              <path d="M90 147 C82 137 68 138 68 123 C68 114 79 111 90 122 C101 111 112 114 112 123 C112 138 98 137 90 147Z" fill="#fff8f4" opacity=".95"/>
+            </svg>
+            <div class="mini-title">A note from us</div>
+            <p>We made you a little puzzle garden. Every finished row opens one more flower.</p>
+          </div>
+          <div class="title-card">
+            <div class="flourish">🌿 · ♡ · 🌿</div>
+            <h2>Mom’s Puzzle Garden</h2>
+            <p>
+              Happy Mother’s Day, Mom. Every row you complete blooms one flower — for the care, patience, love, and home you have grown around us.
+            </p>
+          </div>
+
+          <aside class="progress-card" aria-live="polite">
+            <div class="mini-title">Bloom progress</div>
+            <div class="plant-wrap" id="plantWrap"></div>
+            <div class="progress-number"><span id="progressNumber">0</span>%</div>
+            <div class="progress-text" id="progressText">Waiting for the first flower...</div>
+            <div class="bar" aria-label="Bloom progress">
+              <div class="bar-fill" id="barFill"></div>
+            </div>
+            <div class="row-flowers" id="rowFlowers" aria-label="Flowers bloomed by completed rows"></div>
+            <div class="quote" id="quoteLine">Each row is a small thank-you for what you helped grow.</div>
+          </aside>
+        </section>
+
+        <section class="play-area">
+          <div class="puzzle-shell">
+            <div class="puzzle-topline">
+              <div>
+                <strong>Garden sudoku</strong><br/>
+                Fill each empty tile with 1–4. Every time a row is correct, one flower blooms and locks into the garden.
+              </div>
+              <div aria-hidden="true">♡</div>
+            </div>
+
+            <div class="sudoku" id="sudoku" role="grid" aria-label="4 by 4 garden sudoku puzzle"></div>
+
+            <div class="controls">
+              <button class="btn primary" id="checkBtn">Check puzzle</button>
+              <button class="btn secondary" id="hintBtn">Gentle hint</button>
+              <button class="btn secondary" id="resetBtn">Reset</button>
+            </div>
+
+            <div class="message-box" id="messageBox">
+              Tap a soft pink tile to cycle through numbers. Complete a row to bloom a flower.
+            </div>
+          </div>
+
+        </section>
+
+        <section class="reveal-section hidden" id="revealSection">
+          <div class="section-title">See the garden bloom</div>
+
+          <div class="bloom-row">
+            <article class="bloom-card">
+              <h3>Puzzle completed</h3>
+              <div id="completePuzzleArt"></div>
+              <p>Four careful rows, four flowers earned.</p>
+            </article>
+
+            <article class="bloom-card">
+              <h3>Garden in full bloom</h3>
+              <div id="fullBloomArt"></div>
+              <p>Care, patience, love, and home grow into one garden.</p>
+            </article>
+
+            <article class="bloom-card">
+              <h3>Bouquet of love</h3>
+              <div id="bouquetArt"></div>
+              <p>A bouquet from us, in flower form.</p>
+            </article>
+          </div>
+
+          <article class="final-card">
+            <div class="heart-note">The bouquet<br/>is ready,<br/>Mom.</div>
+            <div class="final-copy">
+              <div class="kicker">A message from us</div>
+              <p>
+                The flowers are all open. When you’re ready, there’s one last note waiting for you.
+              </p>
+              <button class="btn primary final-open" id="openMessageBtn">Open the message</button>
+            </div>
+          </article>
+        </section>
+
+
+        <div class="footer">A garden grown with love <span class="heart">♡</span> from all of us</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="finalModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="closeModalBtn" aria-label="Close final message">&times;</button>
+      <div class="modal-head">
+        <div>
+          <div class="kicker" id="modalTitle">A message from us</div>
+        </div>
+      </div>
+
+      <div class="family-strip">
+        <svg viewBox="0 0 380 90" aria-label="Our family: two Westies, two boys, and a girl" role="img" style="width:100%;max-width:400px;height:auto;overflow:visible">
+          <defs>
+            <linearGradient id="furM" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fffdf8"/><stop offset="100%" stop-color="#eeeae4"/></linearGradient>
+            <linearGradient id="bandM" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f9c8c8"/><stop offset="100%" stop-color="#df8990"/></linearGradient>
+            <linearGradient id="skinG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde8d8"/><stop offset="100%" stop-color="#f0cab0"/></linearGradient>
+            <linearGradient id="hairDk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#362a20"/><stop offset="100%" stop-color="#241a14"/></linearGradient>
+          </defs>
+
+          <!-- Westie 1 -->
+          <g transform="translate(38,45)">
+            <ellipse cx="0" cy="0" rx="28" ry="26" fill="url(#furM)" stroke="#d5cdc2" stroke-width="1.5"/>
+            <path d="M-22 -6 L-28 -32 L-10 -14Z" fill="url(#furM)" stroke="#d5cdc2" stroke-width="1.5"/>
+            <path d="M22 -6 L28 -32 L10 -14Z" fill="url(#furM)" stroke="#d5cdc2" stroke-width="1.5"/>
+            <path d="M-20 -10 L-24 -26 L-12 -14Z" fill="#f5e0d0" opacity="0.4"/>
+            <path d="M20 -10 L24 -26 L12 -14Z" fill="#f5e0d0" opacity="0.4"/>
+            <path d="M-14 -10 Q-8 -14 -2 -10" fill="none" stroke="#c8bfb4" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M2 -10 Q8 -14 14 -10" fill="none" stroke="#c8bfb4" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="-8" cy="0" r="4" fill="#1e1a16"/><circle cx="8" cy="0" r="4" fill="#1e1a16"/>
+            <circle cx="-6.5" cy="-1.5" r="1.5" fill="#fff"/><circle cx="9.5" cy="-1.5" r="1.5" fill="#fff"/>
+            <path d="M-5 10 Q0 6 5 10 Q4 14 0 15 Q-4 14 -5 10Z" fill="#1e1a16"/>
+            <path d="M-8 18 Q0 24 8 18" fill="none" stroke="#9c8f82" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M-2 20 Q0 24 2 20 Q1.5 28 0 29 Q-1.5 28 -2 20Z" fill="#e89898"/>
+          </g>
+
+          <!-- Boy 1: slicked-back hair -->
+          <g transform="translate(114,45)">
+            <ellipse cx="0" cy="2" rx="28" ry="32" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1.5"/>
+            <ellipse cx="-28" cy="4" rx="5" ry="8" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1"/>
+            <ellipse cx="28" cy="4" rx="5" ry="8" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1"/>
+            <path d="M-28 -4 Q-26 -36 0 -42 Q26 -36 28 -4 Q24 -18 0 -22 Q-24 -18 -28 -4Z" fill="url(#hairDk)" stroke="#1a1410" stroke-width="0.8"/>
+            <path d="M-28 -4 Q-30 4 -26 10" fill="none" stroke="url(#hairDk)" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M28 -4 Q30 4 26 10" fill="none" stroke="url(#hairDk)" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M-14 -30 Q0 -36 14 -30" fill="none" stroke="#1a1410" stroke-width="0.5" opacity="0.3"/>
+            <path d="M-20 -22 Q0 -28 20 -22" fill="none" stroke="#1a1410" stroke-width="0.5" opacity="0.25"/>
+            <ellipse cx="-10" cy="2" rx="3.5" ry="4" fill="#1e1a16"/>
+            <ellipse cx="10" cy="2" rx="3.5" ry="4" fill="#1e1a16"/>
+            <circle cx="-8.5" cy="0.5" r="1.3" fill="#fff"/><circle cx="11.5" cy="0.5" r="1.3" fill="#fff"/>
+            <path d="M-10 16 Q0 24 10 16" fill="none" stroke="#a0948a" stroke-width="1.8" stroke-linecap="round"/>
+          </g>
+
+          <!-- Girl: shoulder-length dark hair -->
+          <g transform="translate(190,45)">
+            <path d="M-28 0 Q-30 28 -22 42 Q-20 44 -16 40 L-18 8 Q-16 -18 0 -22 Q16 -18 18 8 L16 40 Q12 44 10 42 Q18 28 16 0" fill="url(#hairDk)" stroke="#1a1410" stroke-width="0.8"/>
+            <ellipse cx="0" cy="2" rx="28" ry="32" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1.5"/>
+            <path d="M-28 -2 Q-26 -38 0 -44 Q26 -38 28 -2 Q24 -16 0 -20 Q-24 -16 -28 -2Z" fill="url(#hairDk)" stroke="#1a1410" stroke-width="0.8"/>
+            <path d="M-28 -2 Q-30 10 -24 24 Q-22 26 -20 22 L-24 -2Z" fill="url(#hairDk)"/>
+            <path d="M28 -2 Q30 10 24 24 Q22 26 20 22 L24 -2Z" fill="url(#hairDk)"/>
+            <ellipse cx="-10" cy="2" rx="3.5" ry="4.5" fill="#1e1a16"/>
+            <ellipse cx="10" cy="2" rx="3.5" ry="4.5" fill="#1e1a16"/>
+            <circle cx="-8.5" cy="0.5" r="1.3" fill="#fff"/><circle cx="11.5" cy="0.5" r="1.3" fill="#fff"/>
+            <path d="M-15 -3 L-17 -6" stroke="#1e1a16" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M15 -3 L17 -6" stroke="#1e1a16" stroke-width="0.8" stroke-linecap="round"/>
+            <ellipse cx="-18" cy="10" rx="6" ry="3.5" fill="#f5b7b8" opacity="0.35"/>
+            <ellipse cx="18" cy="10" rx="6" ry="3.5" fill="#f5b7b8" opacity="0.35"/>
+            <path d="M-10 18 Q0 28 10 18" fill="none" stroke="#a0948a" stroke-width="1.8" stroke-linecap="round"/>
+          </g>
+
+          <!-- Boy 2: buzz cut -->
+          <g transform="translate(266,45)">
+            <ellipse cx="0" cy="2" rx="28" ry="32" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1.5"/>
+            <ellipse cx="-28" cy="4" rx="5" ry="8" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1"/>
+            <ellipse cx="28" cy="4" rx="5" ry="8" fill="url(#skinG)" stroke="#ddc0a4" stroke-width="1"/>
+            <path d="M-28 -6 Q-26 -36 0 -42 Q26 -36 28 -6 Q24 -18 0 -22 Q-24 -18 -28 -6Z" fill="#5a4a3c" stroke="#4a3a2e" stroke-width="0.8"/>
+            <circle cx="-12" cy="-28" r="0.7" fill="#4a3a2e" opacity="0.3"/>
+            <circle cx="0" cy="-34" r="0.7" fill="#4a3a2e" opacity="0.3"/>
+            <circle cx="12" cy="-28" r="0.7" fill="#4a3a2e" opacity="0.3"/>
+            <circle cx="-6" cy="-22" r="0.6" fill="#4a3a2e" opacity="0.2"/>
+            <circle cx="6" cy="-22" r="0.6" fill="#4a3a2e" opacity="0.2"/>
+            <ellipse cx="-10" cy="2" rx="3.5" ry="4" fill="#1e1a16"/>
+            <ellipse cx="10" cy="2" rx="3.5" ry="4" fill="#1e1a16"/>
+            <circle cx="-8.5" cy="0.5" r="1.3" fill="#fff"/><circle cx="11.5" cy="0.5" r="1.3" fill="#fff"/>
+            <path d="M-10 16 Q0 24 10 16" fill="none" stroke="#a0948a" stroke-width="1.8" stroke-linecap="round"/>
+          </g>
+
+          <!-- Westie 2 (head tilted) -->
+          <g transform="translate(342,45) rotate(-8)">
+            <ellipse cx="0" cy="0" rx="28" ry="26" fill="url(#furM)" stroke="#d5cdc2" stroke-width="1.5"/>
+            <path d="M-22 -6 L-28 -32 L-10 -14Z" fill="url(#furM)" stroke="#d5cdc2" stroke-width="1.5"/>
+            <path d="M22 -6 L28 -32 L10 -14Z" fill="url(#furM)" stroke="#d5cdc2" stroke-width="1.5"/>
+            <path d="M-20 -10 L-24 -26 L-12 -14Z" fill="#f5e0d0" opacity="0.4"/>
+            <path d="M20 -10 L24 -26 L12 -14Z" fill="#f5e0d0" opacity="0.4"/>
+            <path d="M-14 -10 Q-8 -14 -2 -10" fill="none" stroke="#c8bfb4" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M2 -10 Q8 -14 14 -10" fill="none" stroke="#c8bfb4" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="-8" cy="0" r="4" fill="#1e1a16"/><circle cx="8" cy="0" r="4" fill="#1e1a16"/>
+            <circle cx="-6.5" cy="-1.5" r="1.5" fill="#fff"/><circle cx="9.5" cy="-1.5" r="1.5" fill="#fff"/>
+            <path d="M-5 10 Q0 6 5 10 Q4 14 0 15 Q-4 14 -5 10Z" fill="#1e1a16"/>
+            <path d="M-8 18 Q0 24 8 18" fill="none" stroke="#9c8f82" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <div class="caption">
+          From all of us &mdash; two- and four-legged alike.
+        </div>
+      </div>
+
+      <div class="modal-copy">
+        <p>This little garden is from us.</p>
+        <p>Each flower stands for something you bring into our lives: care, patience, love, and a sense of home.</p>
+        <p>Some of us are louder than others. Some of us have bigger ears than others. But all of us know the same thing: you make life better just by being you.</p>
+        <p>Thanks for everything you do and for all the ways you keep things steady, warm, and running.</p>
+        <div class="modal-signoff">Happy Mother&rsquo;s Day.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const solution = [
+      [1, 2, 3, 4],
+      [3, 4, 1, 2],
+      [2, 1, 4, 3],
+      [4, 3, 2, 1]
+    ];
+
+    const givens = [
+      [1, 0, 3, 0],
+      [0, 4, 0, 2],
+      [2, 1, 0, 0],
+      [4, 0, 2, 0]
+    ];
+
+    let grid = givens.map(row => row.slice());
+    let hintCount = 0;
+    let completed = false;
+    let rowBlooms = [false, false, false, false];
+    let autoCompleteTimer = null;
+
+    const rowData = [
+      { word: "Care",     flower: "🌷", line: "for every small way you noticed what we needed" },
+      { word: "Patience", flower: "🌸", line: "for the love that kept showing up, even when life was messy" },
+      { word: "Love",     flower: "🌹", line: "for the love you keep bringing to all of us" },
+      { word: "Home",     flower: "🌼", line: "for making the world feel safer, softer, and more full" }
+    ];
+
+    /* ── Cache all DOM refs once ── */
+    const sudokuEl      = document.getElementById("sudoku");
+    const messageBox    = document.getElementById("messageBox");
+    const progressNum   = document.getElementById("progressNumber");
+    const progressText  = document.getElementById("progressText");
+    const barFill       = document.getElementById("barFill");
+    const quoteLine     = document.getElementById("quoteLine");
+    const revealSection = document.getElementById("revealSection");
+    const toast         = document.getElementById("toast");
+    const finalModal    = document.getElementById("finalModal");
+    const openMsgBtn    = document.getElementById("openMessageBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const rowFlowersEl  = document.getElementById("rowFlowers");
+    const plantWrapEl   = document.getElementById("plantWrap");
+
+    /* ── 4×4 cell element cache for O(1) access ── */
+    const cells = Array.from({ length: 4 }, () => Array(4).fill(null));
+
+    /* ── Helpers ── */
+    const isGiven    = (r, c) => givens[r][c] !== 0;
+    const isRowCorrect = r => grid[r].every((v, c) => v === solution[r][c]);
+
+    /* ── Build grid once, never destroy ── */
+    function buildGrid() {
+      const frag = document.createDocumentFragment();
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.setAttribute("role", "gridcell");
+          btn.dataset.r = r;
+          btn.dataset.c = c;
+          syncCellDOM(btn, r, c);
+          cells[r][c] = btn;
+          frag.appendChild(btn);
+        }
+      }
+      sudokuEl.appendChild(frag);
+    }
+
+    /* ── Sync a single cell's classes / text / disabled state ── */
+    function syncCellDOM(el, r, c) {
+      const given = isGiven(r, c);
+      const bloomed = rowBlooms[r];
+      const val = grid[r][c];
+
+      let cls = "cell";
+      if (given)                   cls += " given";
+      if (val)                     cls += " filled";
+      if (bloomed)                 cls += " row-bloomed";
+      el.className = cls;
+
+      el.textContent = val || "";
+      el.disabled = given || completed || bloomed;
+      el.setAttribute("aria-label",
+        `Row ${r+1}, column ${c+1}${given ? ", given number" : ", editable tile"}`);
+    }
+
+    /* ── Event delegation: one listener on the grid ── */
+    sudokuEl.addEventListener("click", e => {
+      const btn = e.target.closest(".cell");
+      if (!btn || btn.disabled) return;
+      const r = +btn.dataset.r, c = +btn.dataset.c;
+      if (isGiven(r, c) || completed || rowBlooms[r]) return;
+
+      grid[r][c] = grid[r][c] === 4 ? 0 : grid[r][c] + 1;
+      syncCellDOM(btn, r, c);
+      checkRowBloom(r);
+    });
+
+    /* ── Check only the affected row instead of all rows ── */
+    function checkRowBloom(r) {
+      if (rowBlooms[r] || !isRowCorrect(r)) { refreshProgress(); return; }
+
+      // Row just bloomed
+      rowBlooms[r] = true;
+      lockRow(r);
+      const item = rowData[r];
+      messageBox.innerHTML = `<strong>${item.word} bloomed.</strong><br/>This flower is ${item.line}.`;
+      showToast(`${item.flower} ${item.word} bloomed`, `Row ${r+1} is complete — one more flower for Mom.`);
+      refreshProgress();
+
+      if (rowBlooms.every(Boolean) && !completed) {
+        clearTimeout(autoCompleteTimer);
+        autoCompleteTimer = setTimeout(() => completePuzzle(), 650);
+      }
+    }
+
+    /* ── Lock a single row's cells ── */
+    function lockRow(r) {
+      for (let c = 0; c < 4; c++) syncCellDOM(cells[r][c], r, c);
+      renderRowFlower(r);
+    }
+
+    /* ── Progress bar + plant stage ── */
+    function refreshProgress() {
+      const bloomCount = rowBlooms.filter(Boolean).length;
+      const pct = completed ? 100 : bloomCount * 25;
+      progressNum.textContent = pct;
+      barFill.style.width = pct + "%";
+
+      const stages = [
+        ["Waiting for the first flower...",  "Each row is a small thank-you for what you helped grow.", 1],
+        ["One flower has bloomed.",           "Care begins with noticing what someone needs.",           1],
+        ["Two flowers have bloomed.",         "Patience is love that keeps showing up.",                 2],
+        ["Three flowers have bloomed.",       "Love keeps reaching, even across distance.",              3],
+        ["The garden is ready.",              "All the little flowers have become one bouquet.",          4]
+      ];
+      const [txt, quote, stage] = stages[Math.min(bloomCount, 4)];
+      progressText.textContent = txt;
+      quoteLine.textContent = quote;
+      renderPlant("plantWrap", stage);
+    }
+
+    /* ── Row flowers: update only the one that changed ── */
+    function buildRowFlowers() {
+      rowFlowersEl.innerHTML = rowData.map((item, i) => `
+        <div class="row-flower" id="rf${i}" title="${item.word}">
+          <div class="emoji" aria-hidden="true">${item.flower}</div>
+          <strong>${item.word}</strong>
+        </div>`).join("");
+    }
+
+    function renderRowFlower(i) {
+      const el = document.getElementById("rf" + i);
+      if (el && rowBlooms[i]) el.classList.add("bloomed");
+    }
+
+    /* ── Modal ── */
+    function openFinalModal() {
+      if (!finalModal) return;
+      finalModal.classList.add("show");
+      finalModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeFinalModal() {
+      if (!finalModal) return;
+      finalModal.classList.remove("show");
+      finalModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    /* ── Check puzzle (button) ── */
+    function checkPuzzle() {
+      let allFilled = true, allCorrect = true;
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 4; c++) {
+          if (grid[r][c] === 0) allFilled = false;
+          if (grid[r][c] !== solution[r][c]) allCorrect = false;
+        }
+
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 4; c++)
+          cells[r][c].classList.remove("wrong", "correct");
+
+      void sudokuEl.offsetHeight;
+
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 4; c++) {
+          if (!isGiven(r, c) && grid[r][c] !== 0)
+            cells[r][c].classList.add(grid[r][c] === solution[r][c] ? "correct" : "wrong");
+        }
+
+      if (!allFilled) {
+        messageBox.innerHTML = "A few tiles are still waiting. The garden is patient — each finished row will bloom one flower.";
+        showToast("Almost there", "Complete one row at a time. Each correct row becomes a flower for Mom.");
+        return;
+      }
+      if (!allCorrect) {
+        messageBox.innerHTML = "Not quite yet. Look for the row that has not bloomed. One small adjustment may help the next flower open.";
+        showToast("A tiny puzzle wrinkle", "Some numbers are not in the right place yet. The garden still has unlimited patience.");
+        return;
+      }
+      completePuzzle();
+    }
+
+    function completePuzzle() {
+      completed = true;
+      grid = solution.map(row => row.slice());
+      rowBlooms = [true, true, true, true];
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 4; c++) syncCellDOM(cells[r][c], r, c);
+      for (let i = 0; i < 4; i++) renderRowFlower(i);
+      refreshProgress();
+      messageBox.innerHTML = "The whole bouquet has opened. A message from all of us is waiting below.";
+      revealSection.classList.remove("hidden");
+      renderAllArt();
+      showToast("Bouquet opened", "Four rows became four flowers — the final note is ready.");
+      setTimeout(() => revealSection.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
+      setTimeout(() => openFinalModal(), 850);
+    }
+
+    function giveHint() {
+      if (completed) return;
+      const blanks = [];
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 4; c++)
+          if (!isGiven(r, c) && grid[r][c] !== solution[r][c]) blanks.push([r, c]);
+
+      if (!blanks.length) {
+        messageBox.innerHTML = "All editable tiles are already correct. Press \u201CCheck puzzle\u201D to bloom the garden.";
+        return;
+      }
+      const [r, c] = blanks[hintCount % blanks.length];
+      grid[r][c] = solution[r][c];
+      hintCount++;
+      syncCellDOM(cells[r][c], r, c);
+      checkRowBloom(r);
+      messageBox.innerHTML = `A gentle hint placed one piece for you. Keep building row ${r+1}; that flower is getting closer.`;
+    }
+
+    function resetPuzzle() {
+      completed = false;
+      grid = givens.map(row => row.slice());
+      hintCount = 0;
+      rowBlooms = [false, false, false, false];
+      clearTimeout(autoCompleteTimer);
+      revealSection.classList.add("hidden");
+      messageBox.innerHTML = "Tap a soft pink tile to cycle through numbers. Complete a row to bloom a flower.";
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 4; c++) syncCellDOM(cells[r][c], r, c);
+      buildRowFlowers();
+      refreshProgress();
+      closeFinalModal();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showToast(title, body) {
+      toast.innerHTML = `<strong>${title}</strong>${body}`;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 3400);
+    }
+
+    /* ── SVG generators (unchanged visuals) ── */
+    function plantSvg(stage = 1, compact = false) {
+      const petals = stage >= 4, flowers = stage >= 3, leaves2 = stage >= 2;
+      const scale = compact ? 0.9 : 1;
+      return `<svg class="plant" viewBox="0 0 180 180" aria-hidden="true" style="transform:scale(${scale})">
+        <ellipse cx="90" cy="154" rx="42" ry="9" fill="rgba(76,63,48,.10)"/>
+        <path d="M58 112H122L112 158H68Z" fill="#d9a67f" stroke="#b88968" stroke-width="2"/>
+        <path d="M55 112H125Q121 124 112 124H68Q59 124 55 112Z" fill="#e4bb96" stroke="#b88968" stroke-width="2"/>
+        <path d="M90 112C88 86 90 65 90 42" fill="none" stroke="#687b54" stroke-width="5" stroke-linecap="round"/>
+        <path d="M89 78C70 66 62 73 57 86C73 87 83 84 89 78Z" fill="#8fa07c" stroke="#687b54" stroke-width="2"/>
+        ${leaves2 ? `<path d="M92 94C113 78 123 84 128 99C111 101 100 100 92 94Z" fill="#8fa07c" stroke="#687b54" stroke-width="2"/>` : ""}
+        ${flowers ? `<path d="M90 46C76 34 78 18 90 18C102 18 104 34 90 46Z" fill="#f5b7b8" stroke="#d87882" stroke-width="2"/>
+          <path d="M90 46C74 49 65 38 72 29C83 22 91 34 90 46Z" fill="#f9cfd0" stroke="#d87882" stroke-width="2"/>
+          <path d="M90 46C106 49 115 38 108 29C97 22 89 34 90 46Z" fill="#f9cfd0" stroke="#d87882" stroke-width="2"/>
+          <circle cx="90" cy="43" r="6" fill="#e7c86b"/>` : `<path d="M90 43C84 35 86 27 92 26C99 28 99 37 90 43Z" fill="#f5b7b8" stroke="#d87882" stroke-width="2"/>`}
+        ${petals ? `<g opacity=".9"><path d="M47 58C43 52 44 47 50 48C55 51 53 57 47 58Z" fill="#f8c4c5"/>
+          <path d="M134 61C130 55 132 49 138 51C142 55 140 60 134 61Z" fill="#f8c4c5"/>
+          <path d="M36 105C31 100 33 94 39 96C43 100 41 105 36 105Z" fill="#f8c4c5"/></g>` : ""}
+      </svg>`;
+    }
+
+    function flowerStem(x1, y1, x2, y2, s = 1) {
+      const mid = Math.round((y1 + y2) / 2);
+      return `<path d="M${x1} ${y1}C${x1} ${mid} ${x2} ${mid} ${x2} ${y2+18}" fill="none" stroke="#687b54" stroke-width="3" stroke-linecap="round"/>${flower(x2,y2,s)}`;
+    }
+
+    function flower(x, y, s = 1) {
+      return `<g transform="translate(${x} ${y}) scale(${s})">
+        <ellipse cx="0" cy="-12" rx="9" ry="14" fill="#f5b7b8" stroke="#d87882" stroke-width="1.6"/>
+        <ellipse cx="-12" cy="-3" rx="9" ry="14" fill="#f9cfd0" stroke="#d87882" stroke-width="1.6" transform="rotate(-48 -12 -3)"/>
+        <ellipse cx="12" cy="-3" rx="9" ry="14" fill="#f9cfd0" stroke="#d87882" stroke-width="1.6" transform="rotate(48 12 -3)"/>
+        <ellipse cx="-7" cy="8" rx="8" ry="12" fill="#f6b9ba" stroke="#d87882" stroke-width="1.6" transform="rotate(30 -7 8)"/>
+        <ellipse cx="7" cy="8" rx="8" ry="12" fill="#f6b9ba" stroke="#d87882" stroke-width="1.6" transform="rotate(-30 7 8)"/>
+        <circle cx="0" cy="1" r="6" fill="#e7c86b"/>
+      </g>`;
+    }
+
+    function leafCloud() {
+      return [[72,100,-24],[86,88,22],[129,94,-16],[145,103,24],[103,105,-38],[119,109,36]]
+        .map(([x,y,r]) => `<ellipse cx="${x}" cy="${y}" rx="10" ry="20" fill="#8fa07c" transform="rotate(${r} ${x} ${y})"/>`).join("");
+    }
+
+    function tag(text, x, y) {
+      return `<g transform="translate(${x} ${y}) rotate(${x%2?-9:7})">
+        <rect x="-31" y="-13" width="62" height="26" rx="7" fill="#fff7ef" stroke="#d8c7b3" stroke-width="1.5"/>
+        <text x="0" y="5" text-anchor="middle" font-family="Georgia,serif" font-size="${text.length>8?11:13}" fill="#596b4c">${text}</text>
+      </g>`;
+    }
+
+    function flowerPotSvg() {
+      return `<svg class="flower-svg" viewBox="0 0 220 180" aria-hidden="true">
+        <ellipse cx="110" cy="162" rx="55" ry="10" fill="rgba(76,63,48,.10)"/>
+        <path d="M66 116H154L140 168H80Z" fill="#d9a67f" stroke="#b88968" stroke-width="2"/>
+        <path d="M60 112H160Q156 126 140 126H80Q64 126 60 112Z" fill="#e4bb96" stroke="#b88968" stroke-width="2"/>
+        ${flowerStem(110,110,75,36)}${flowerStem(88,112,64,54)}${flowerStem(132,112,154,55)}
+        ${flowerStem(104,112,102,42)}${flowerStem(118,112,124,44)}
+        <path d="M98 95C72 78 67 94 68 106C84 107 94 103 98 95Z" fill="#8fa07c"/>
+        <path d="M118 92C144 76 150 92 149 106C132 108 123 102 118 92Z" fill="#8fa07c"/>
+        <path d="M106 112C88 98 81 109 82 119C94 121 102 117 106 112Z" fill="#8fa07c"/>
+      </svg>`;
+    }
+
+    function fullBloomSvg() {
+      const pts = [[110,42,1.1],[82,58,.9],[138,58,.9],[66,82,.78],[154,82,.78],[104,78,.85],[120,80,.85]];
+      return `<svg class="flower-svg" viewBox="0 0 220 180" aria-hidden="true">
+        <ellipse cx="110" cy="162" rx="58" ry="11" fill="rgba(76,63,48,.10)"/>
+        <path d="M64 116H156L141 168H79Z" fill="#d9a67f" stroke="#b88968" stroke-width="2"/>
+        <path d="M58 112H162Q158 126 141 126H79Q62 126 58 112Z" fill="#e4bb96" stroke="#b88968" stroke-width="2"/>
+        ${pts.map(([x,y,s]) => flowerStem(110,113,x,y,s)).join("")}
+        ${leafCloud()}
+      </svg>`;
+    }
+
+    function bouquetSvg() {
+      const tags = [["Care",67,72],["Patience",142,68],["Home",157,102],["Love",75,111],["You Matter",112,126]];
+      const fls = [[64,48,.82],[110,31,1],[166,47,.82],[84,76,.75],[136,76,.75],[116,86,.75],[101,64,.68],[148,91,.68]];
+      return `<svg class="flower-svg" viewBox="0 0 240 190" aria-hidden="true">
+        <ellipse cx="120" cy="172" rx="56" ry="9" fill="rgba(76,63,48,.10)"/>
+        <path d="M85 128L155 128L140 178H100Z" fill="rgba(255,255,255,.38)" stroke="#9ab097" stroke-width="2"/>
+        <path d="M94 128C92 95 87 70 64 50" stroke="#687b54" stroke-width="3" fill="none"/>
+        <path d="M110 128C109 86 110 56 110 30" stroke="#687b54" stroke-width="3" fill="none"/>
+        <path d="M128 128C132 92 144 66 166 47" stroke="#687b54" stroke-width="3" fill="none"/>
+        ${fls.map(([x,y,s]) => flower(x,y,s)).join("")}
+        ${tags.map(([t,x,y]) => tag(t,x,y)).join("")}
+      </svg>`;
+    }
+
+    function renderPlant(id, stage) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = plantSvg(stage);
+    }
+
+    function renderAllArt() {
+      document.getElementById("completePuzzleArt").innerHTML = flowerPotSvg();
+      document.getElementById("fullBloomArt").innerHTML = fullBloomSvg();
+      document.getElementById("bouquetArt").innerHTML = bouquetSvg();
+    }
+
+    function initArt() {
+      renderPlant("plantWrap", 1);
+      renderAllArt();
+    }
+
+    /* ── Wire up buttons (once) ── */
+    document.getElementById("checkBtn").addEventListener("click", checkPuzzle);
+    openMsgBtn?.addEventListener("click", openFinalModal);
+    closeModalBtn?.addEventListener("click", closeFinalModal);
+    finalModal?.addEventListener("click", e => { if (e.target === finalModal) closeFinalModal(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeFinalModal(); });
+    document.getElementById("hintBtn").addEventListener("click", giveHint);
+    document.getElementById("resetBtn").addEventListener("click", resetPuzzle);
+
+    /* ── Init ── */
+    buildGrid();
+    buildRowFlowers();
+    refreshProgress();
+    initArt();
+  </script>
+</body>
+</html>
